@@ -1,2 +1,19 @@
-# data
-/01_data
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Local data
+01_data/01_raw_data/
+01_data/02_processed_data/
+
+# Temporary files
+*.tmp
