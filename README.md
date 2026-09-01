@@ -11,6 +11,16 @@ The project answers two related questions:
 
 The goal is not only to build clusters, but to translate customer behaviour into interpretable and actionable segment profiles.
 
+## Data Source
+
+This project is based on the **Online Retail II** transaction dataset, accessed via Kaggle:
+
+[Online Retail II – UCI dataset on Kaggle](https://www.kaggle.com/datasets/mashlyn/online-retail-ii-uci/)
+
+The dataset contains historical e-commerce transaction records. It is used to build customer-level purchase profiles, derive Recency, Frequency, and Monetary value metrics, and develop an actionable customer segmentation.
+
+The data is used for educational and portfolio purposes only. Raw source data is not redistributed in this repository.
+
 ## Current Status
 
 **Current stage: Final RFM segmentation selected; behavioural and time-based segment profiling in progress.**
