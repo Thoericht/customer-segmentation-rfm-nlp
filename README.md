@@ -97,12 +97,12 @@ The two-cluster model had the strongest silhouette score and represents a useful
 
 ## Model Comparison
 
-| Model | Main feature set | Outcome |
+| Model | Purpose | Outcome |
 |---|---|---|
-| RFM baseline | Log-transformed and standardised RFM features | Best-performing and most interpretable core model |
-| Robust RFM | RFM with outlier handling, `log1p`, and scaling | Selected final segmentation approach |
-| RFM + NLP | RFM plus text-derived SVD components | Did not improve cluster separation |
-| Extended behavioural model | RFM plus behavioural/time features | Used primarily for post-clustering profiling and activation insights |
+| RFM baseline | Initial benchmark using log-transformed RFM features | Establishes a simple comparison model |
+| Robust RFM | Final model with p99 capping, log transformation, and scaling | Selected for stable, interpretable, and actionable four-segment solution |
+| Robust RFM + NLP | Tests whether product-text features improve segmentation | Did not outperform the robust RFM model |
+| Robust RFM + Behaviour | Tests whether timing and purchase-rhythm features improve segmentation | Did not outperform the robust RFM model; retained for segment profiling |
 
 ## Repository Structure
 
