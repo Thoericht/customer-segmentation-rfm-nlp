@@ -2,7 +2,7 @@
 
 A robust customer segmentation project that transforms e-commerce transaction data into actionable customer groups. The final segmentation uses an RFM-based K-Means model and enriches the resulting segments with behavioural, timing, and product-preference profiling.
 
-[View the executive summary presentation (PDF)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/20260902_OnlineRetail_ExecutiveSummary.pdf)
+View the executive summary presentation [(PDF)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/20260902_OnlineRetail_ExecutiveSummary.pdf) and the modelcard of the final model [(MD)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/Modelcard_KMeans_20260902.md)
 
 ## Business Objective
 
