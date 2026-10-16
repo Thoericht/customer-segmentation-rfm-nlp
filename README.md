@@ -1,8 +1,8 @@
 # Customer Segmentation Project
 
-A robust customer segmentation project that transforms e-commerce transaction data into actionable customer groups. The final segmentation uses an RFM-based K-Means model and enriches the resulting segments with behavioural, timing, and product-preference profiling.
+A robust customer segmentation project that transforms e-commerce transaction data into actionable customer groups. The final segmentation uses an RFM-based K-Means model and enriches the resulting segments with behavioural and timing profiling.
 
-View the executive summary presentation [(PDF)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/20260902_OnlineRetail_ExecutiveSummary.pdf) and the modelcard of the final model [(MD)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/Modelcard_KMeans_20260902.md)
+View the executive summary presentation [(PDF)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/20260902_OnlineRetail_ExecutiveSummary.pdf) and the model card of the final model [(MD)](https://github.com/Thoericht/customer-segmentation-rfm-nlp/blob/master/03_results/Modelcard_KMeans_20260902.md).
 
 ## Business Objective
 
@@ -25,14 +25,15 @@ The data is used for educational and portfolio purposes only. Raw source data is
 
 ## Key Results
 
-- Customer-level profiles were created for **5,879 identifiable customers**.
+- Customer-level profiles were created for **5,879 identifiable customers**. The non-identifiable aggregated record (`CustomerID = "Unknown"`) was excluded beforehand.
+- **One extreme outlier was excluded** from the segmentation: a single customer record that combines a large number of diverse orders and lies far apart from all other customers. It was treated as an implausible aggregated record. The final segmentation is therefore based on **5,878 customers**.
 - The final segmentation uses **Recency, Frequency, and Monetary value (RFM)**.
-- The non-identifiable aggregated record (`CustomerID = "Unknown"`) was excluded from customer-level analysis and segmentation.
 - To limit the influence of extreme high-frequency and high-monetary observations in distance-based clustering, Frequency and Monetary were capped at the **99th percentile** for model fitting.
 - Modelling features were transformed using `log1p` and standardised before K-Means clustering.
 - The two-cluster solution achieved the highest silhouette score, but the four-cluster solution was selected because it produced distinct, balanced, and more actionable business profiles.
 - The selected four-cluster solution achieved a silhouette score of approximately **0.369** and very high resampling stability: mean Adjusted Rand Index (ARI) = **0.980**, SD = **0.006**.
-- Text-derived SVD features and behavioural features did not improve clustering quality relative to the parsimonious Robust RFM model; they are retained for post-clustering profiling and activation.
+- Text-derived SVD features and behavioural features did not improve clustering quality relative to the parsimonious Robust RFM model. Behavioural and timing features are used for post-clustering profiling; text-derived features were not carried forward.
+- Temporal profiles show clear purchase patterns across segments: weekday purchases dominate, midday is the preferred period, the beginning of the month is most common, and autumn is the strongest season. These patterns inform campaign-timing hypotheses (see executive summary).
 
 ## Final Customer Segments
 
@@ -42,6 +43,7 @@ The data is used for educational and portfolio purposes only. Raw source data is
 | Champions | 1,219 | 20.8% | Recent, frequent, and high-value customers | Retain, recognise, cross-sell, and upsell |
 | At-risk mid-value customers | 1,457 | 24.8% | Moderate purchase history, but a long time since the last purchase | Prioritised reactivation and retention |
 | Dormant low-value customers | 1,964 | 33.4% | Very long inactivity, typically one purchase, and low monetary value | Low-cost reactivation or reduced contact intensity |
+| **Total** | **5,878** | **100%** | | |
 
 > Segment labels are business-oriented descriptions of K-Means clusters. They are based on original, uncapped RFM values used for segment profiling; capping was applied only to the model-training features.
 
@@ -53,7 +55,7 @@ The data is used for educational and portfolio purposes only. Raw source data is
 Raw transaction data
     → cleaning and preparation
     → customer-level feature engineering
-    → exploratory data analysis
+    → exploratory data analysis and outlier review
     → robust RFM preprocessing
     → K-Means clustering
     → segment profiling and action recommendations
@@ -66,17 +68,18 @@ The customer-level dataset includes:
 - **RFM metrics:** `recency`, `frequency`, `monetary`
 - **Purchase-timing features:** preferred purchase hour, average purchase hour, weekend share, and preferred time-of-day category
 - **Purchase-rhythm features:** active purchase days, number of order dates, and average days between orders
-- **Product-text features:** TF-IDF representations of product descriptions reduced using Truncated SVD
+- **Product-text features:** TF-IDF representations of product descriptions reduced using Truncated SVD (tested for clustering, not carried forward)
 
 ### Robust RFM Preprocessing
 
 The final RFM model uses the following preparation steps:
 
 1. Exclude records without a valid customer identifier.
-2. Cap `frequency` and `monetary` at their respective 99th percentiles.
-3. Apply `log1p` transformation to Recency, capped Frequency, and capped Monetary value.
-4. Standardise the modelling features with `StandardScaler`.
-5. Fit K-Means models across a range of candidate cluster counts.
+2. Exclude one extreme outlier identified in the exploratory analysis (an implausible aggregated record of diverse orders).
+3. Cap `frequency` and `monetary` at their respective 99th percentiles.
+4. Apply `log1p` transformation to Recency, capped Frequency, and capped Monetary value.
+5. Standardise the modelling features with `StandardScaler`.
+6. Fit K-Means models across a range of candidate cluster counts.
 
 ### Model Evaluation
 
@@ -96,7 +99,7 @@ The two-cluster model had the strongest silhouette score and serves as a useful 
 |---|---|---|
 | RFM baseline | Initial benchmark using log-transformed RFM features | Establishes a simple comparison model |
 | Robust RFM | p99 capping, log transformation, and scaling | Selected for the stable, interpretable, and actionable four-segment solution |
-| Robust RFM + NLP | Tests whether product-text features improve segmentation | Did not outperform Robust RFM |
+| Robust RFM + NLP | Tests whether product-text features improve segmentation | Did not outperform Robust RFM; not carried forward |
 | Robust RFM + Behaviour | Tests whether timing and purchase-rhythm features improve segmentation | Did not outperform Robust RFM; retained for segment profiling |
 
 ## Repository Structure
@@ -145,11 +148,10 @@ The repository intentionally excludes raw data and customer-level output files. 
 - Timing and offer recommendations are hypotheses for testing, not evidence of campaign causality.
 - Segment-specific interventions should be validated using controlled campaign experiments, ideally with control groups or A/B tests.
 
-## Next Steps
+## Possible Next Steps
 
-1. Profile the selected RFM segments by purchase time, weekday, month, seasonality, and purchase rhythm.
-2. Connect transaction-level order dates to the final customer-segment labels.
-3. Analyse product-category and product-description preferences by segment.
-4. Quantify segment value further through revenue contribution and customer-value measures.
-5. Translate segment profiles into testable CRM and marketing journeys.
-6. Validate recommended communication timing and offers through controlled campaign experiments.
+1. Extend the timing profiles with purchase rhythm and longer-term seasonality.
+2. Analyse product-category and product-description preferences by segment.
+3. Quantify segment value further through revenue contribution and customer-value measures.
+4. Translate segment profiles into testable CRM and marketing journeys.
+5. Validate recommended communication timing and offers through controlled campaign experiments.
